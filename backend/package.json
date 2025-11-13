@@ -1,0 +1,13 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-api": "nswag openapi2tsclient /input:http://localhost:8080/v3/api-docs /output:../../frontend/src/API.ts"
+  }
+}
