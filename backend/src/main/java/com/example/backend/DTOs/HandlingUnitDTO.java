@@ -23,4 +23,6 @@ public class HandlingUnitDTO {
     private String type;
 
     private boolean stackable;
+
+    private String noticol;
 }

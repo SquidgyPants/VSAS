@@ -20,6 +20,6 @@ public class DeliveryDTO {
     private String itemNumber;
 
     @ManyToOne
-    @JoinColumn(name = "handlingunit_id")
+    @JoinColumn(name = "handlingunitid")
     private HandlingUnitDTO handlingUnit;
 }

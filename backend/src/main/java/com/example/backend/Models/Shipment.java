@@ -1,19 +1,35 @@
 package com.example.backend.Models;
 
-import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
 public class Shipment {
-    private String id;
     private String noticol;
-    private boolean hazardous;
+    private Boolean hazardous;
     private String destination;
     private String status;
 
-    private List<HandlingUnit> handlingUnits;
+    private String startDate;
+    private String endDate;
+
+    private HandlingUnit handlingUnit;
+
+    public Shipment(String noticol, Boolean hazardous, String destination, String status, String startDate, String endDate) {
+
+        this.noticol = noticol;
+        this.hazardous = hazardous;
+        this.destination = destination;
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
+    public Shipment() {
+    }
 }

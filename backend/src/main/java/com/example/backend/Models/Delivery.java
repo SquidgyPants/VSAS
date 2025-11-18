@@ -3,10 +3,12 @@ package com.example.backend.Models;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Getter
 @Setter
 public class Delivery {
-    private String id;
+    private UUID id;
     private String orderNumber;
     private int quantity;
     private double price;
