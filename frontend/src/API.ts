@@ -18,33 +18,39 @@ export class Client {
     }
 
     /**
+     * @param noticol (optional) 
+     * @param hazardous (optional) 
+     * @param status (optional) 
+     * @param destination (optional) 
+     * @param startDate (optional) 
+     * @param endDate (optional) 
      * @return OK
      */
-    searchShipments(noticol: string, hazardous: boolean, status: string, destination: string, startDate: string, endDate: string): Promise<Shipment[]> {
+    searchShipments(noticol: string | undefined, hazardous: boolean | undefined, status: string | undefined, destination: string | undefined, startDate: string | undefined, endDate: string | undefined): Promise<Shipment[]> {
         let url_ = this.baseUrl + "/shipment/searchShipments?";
-        if (noticol === undefined || noticol === null)
-            throw new globalThis.Error("The parameter 'noticol' must be defined and cannot be null.");
-        else
+        if (noticol === null)
+            throw new globalThis.Error("The parameter 'noticol' cannot be null.");
+        else if (noticol !== undefined)
             url_ += "noticol=" + encodeURIComponent("" + noticol) + "&";
-        if (hazardous === undefined || hazardous === null)
-            throw new globalThis.Error("The parameter 'hazardous' must be defined and cannot be null.");
-        else
+        if (hazardous === null)
+            throw new globalThis.Error("The parameter 'hazardous' cannot be null.");
+        else if (hazardous !== undefined)
             url_ += "hazardous=" + encodeURIComponent("" + hazardous) + "&";
-        if (status === undefined || status === null)
-            throw new globalThis.Error("The parameter 'status' must be defined and cannot be null.");
-        else
+        if (status === null)
+            throw new globalThis.Error("The parameter 'status' cannot be null.");
+        else if (status !== undefined)
             url_ += "status=" + encodeURIComponent("" + status) + "&";
-        if (destination === undefined || destination === null)
-            throw new globalThis.Error("The parameter 'destination' must be defined and cannot be null.");
-        else
+        if (destination === null)
+            throw new globalThis.Error("The parameter 'destination' cannot be null.");
+        else if (destination !== undefined)
             url_ += "destination=" + encodeURIComponent("" + destination) + "&";
-        if (startDate === undefined || startDate === null)
-            throw new globalThis.Error("The parameter 'startDate' must be defined and cannot be null.");
-        else
+        if (startDate === null)
+            throw new globalThis.Error("The parameter 'startDate' cannot be null.");
+        else if (startDate !== undefined)
             url_ += "startDate=" + encodeURIComponent("" + startDate) + "&";
-        if (endDate === undefined || endDate === null)
-            throw new globalThis.Error("The parameter 'endDate' must be defined and cannot be null.");
-        else
+        if (endDate === null)
+            throw new globalThis.Error("The parameter 'endDate' cannot be null.");
+        else if (endDate !== undefined)
             url_ += "endDate=" + encodeURIComponent("" + endDate) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -83,6 +89,47 @@ export class Client {
             });
         }
         return Promise.resolve<Shipment[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getShipmentById(noticol: string): Promise<Shipment> {
+        let url_ = this.baseUrl + "/shipment/getShipmentById?";
+        if (noticol === undefined || noticol === null)
+            throw new globalThis.Error("The parameter 'noticol' must be defined and cannot be null.");
+        else
+            url_ += "noticol=" + encodeURIComponent("" + noticol) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "*/*"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetShipmentById(_response);
+        });
+    }
+
+    protected processGetShipmentById(response: Response): Promise<Shipment> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Shipment.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Shipment>(null as any);
     }
 }
 
@@ -163,6 +210,7 @@ export class HandlingUnit implements IHandlingUnit {
     volume?: number;
     type?: string;
     stackable?: boolean;
+    noticol?: string;
     deliveries?: Delivery[];
 
     [key: string]: any;
@@ -190,6 +238,7 @@ export class HandlingUnit implements IHandlingUnit {
             this.volume = _data["volume"];
             this.type = _data["type"];
             this.stackable = _data["stackable"];
+            this.noticol = _data["noticol"];
             if (Array.isArray(_data["deliveries"])) {
                 this.deliveries = [] as any;
                 for (let item of _data["deliveries"])
@@ -219,6 +268,7 @@ export class HandlingUnit implements IHandlingUnit {
         data["volume"] = this.volume;
         data["type"] = this.type;
         data["stackable"] = this.stackable;
+        data["noticol"] = this.noticol;
         if (Array.isArray(this.deliveries)) {
             data["deliveries"] = [];
             for (let item of this.deliveries)
@@ -237,19 +287,20 @@ export interface IHandlingUnit {
     volume?: number;
     type?: string;
     stackable?: boolean;
+    noticol?: string;
     deliveries?: Delivery[];
 
     [key: string]: any;
 }
 
 export class Shipment implements IShipment {
-    id?: string;
     noticol?: string;
     hazardous?: boolean;
     destination?: string;
     status?: string;
     startDate?: string;
     endDate?: string;
+    actualDate?: string;
     handlingUnit?: HandlingUnit;
 
     [key: string]: any;
@@ -269,13 +320,13 @@ export class Shipment implements IShipment {
                 if (_data.hasOwnProperty(property))
                     this[property] = _data[property];
             }
-            this.id = _data["id"];
             this.noticol = _data["noticol"];
             this.hazardous = _data["hazardous"];
             this.destination = _data["destination"];
             this.status = _data["status"];
             this.startDate = _data["startDate"];
             this.endDate = _data["endDate"];
+            this.actualDate = _data["actualDate"];
             this.handlingUnit = _data["handlingUnit"] ? HandlingUnit.fromJS(_data["handlingUnit"]) : undefined as any;
         }
     }
@@ -293,26 +344,26 @@ export class Shipment implements IShipment {
             if (this.hasOwnProperty(property))
                 data[property] = this[property];
         }
-        data["id"] = this.id;
         data["noticol"] = this.noticol;
         data["hazardous"] = this.hazardous;
         data["destination"] = this.destination;
         data["status"] = this.status;
         data["startDate"] = this.startDate;
         data["endDate"] = this.endDate;
+        data["actualDate"] = this.actualDate;
         data["handlingUnit"] = this.handlingUnit ? this.handlingUnit.toJSON() : undefined as any;
         return data;
     }
 }
 
 export interface IShipment {
-    id?: string;
     noticol?: string;
     hazardous?: boolean;
     destination?: string;
     status?: string;
     startDate?: string;
     endDate?: string;
+    actualDate?: string;
     handlingUnit?: HandlingUnit;
 
     [key: string]: any;

@@ -22,4 +22,18 @@ public class DeliveryDTO {
     @ManyToOne
     @JoinColumn(name = "handlingunitid")
     private HandlingUnitDTO handlingUnit;
+
+    public DeliveryDTO() {
+
+    }
+
+    public DeliveryDTO(String id, String manufacturer, double price,  String itemNumber, String orderNumber, int quantity, HandlingUnitDTO handlingUnit) {
+        this.id = id;
+        this.manufacturer = manufacturer;
+        this.price = price;
+        this.itemNumber = itemNumber;
+        this.orderNumber = orderNumber;
+        this.quantity = quantity;
+        this.handlingUnit = handlingUnit;
+    }
 }

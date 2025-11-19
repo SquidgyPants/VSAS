@@ -26,19 +26,32 @@ public class ShipmentController {
                                                           @RequestParam(required = false) String destination,
                                                           @RequestParam(required = false) String startDate,
                                                           @RequestParam(required = false) String endDate) {
-        Shipment exampleShipment = new Shipment(noticol, hazardous, destination, status, startDate, endDate);
-        if (new Shipment() == exampleShipment) {
-//            List<Shipment> shipments = shipmentService.SearchWithEmpty(exampleShipment);
-            return null;
+        Shipment exampleShipment = new Shipment(
+                noticol != null && !noticol.isBlank() ? noticol : null,
+                hazardous,
+                destination != null && !destination.isBlank() ? destination : null,
+                status != null && !status.isBlank() ? status : null,
+                startDate != null && !startDate.isBlank() ? startDate : null,
+                endDate != null && !endDate.isBlank() ? endDate : null
+        );
+
+        List<Shipment> shipments = shipmentService.SearchShipments(exampleShipment);
+        if (shipments == null || !shipments.iterator().hasNext()) {
+            return ResponseEntity.noContent().build();
         }
         else {
-            List<Shipment> shipments = shipmentService.SearchShipments(exampleShipment);
-            if (shipments == null || !shipments.iterator().hasNext()) {
-                return ResponseEntity.noContent().build();
-            }
-            else {
-                return ResponseEntity.ok(shipments);
-            }
+            return ResponseEntity.ok(shipments);
+        }
+
+    }
+
+    @GetMapping("/getShipmentById")
+    public ResponseEntity<Shipment> getShipmentById(@RequestParam String noticol) {
+        Shipment shipment = shipmentService.GetShipmentById(noticol);
+        if (shipment == null) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(shipment);
         }
     }
 }

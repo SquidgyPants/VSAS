@@ -25,4 +25,20 @@ public class HandlingUnitDTO {
     private boolean stackable;
 
     private String noticol;
+
+    public HandlingUnitDTO() {
+
+    }
+
+    public HandlingUnitDTO(String id, String noticol, String type, double weight, double breadth, double length, double height, boolean stackable, double volume) {
+        this.id = id;
+        this.noticol = noticol;
+        this.type = type;
+        this.weight = weight;
+        this.breadth = breadth;
+        this.length = length;
+        this.height = height;
+        this.stackable = stackable;
+        this.volume = volume;
+    }
 }

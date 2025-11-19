@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import {ref} from 'vue';
-import { Client } from '../API';
-import {useRoute} from 'vue-router';
-// import router from "../router.ts";
+import { Client, Shipment } from '../API';
 
-const route = useRoute();
 const client = new Client();
-const result = ref([] as any[]);
+const result = ref<Shipment[]>([]);
 const isLoading = ref(false);
 const error = ref();
 
@@ -23,7 +20,7 @@ const fetchShipments = async (
   error.value = null;
   try {
     result.value = await client.searchShipments(noticol.value, hazardous.value, status.value, destination.value, startDate.value, endDate.value);
-    console.log("Shipment:",result.value);
+    console.log("Shipment:",result);
   } catch (err) {
     error.value = err;
     console.error("Error fetching shipments:", err);
@@ -52,24 +49,23 @@ const fetchShipments = async (
   <div v-else-if="error">Error: {{ error.message }}</div>
   <div class="container" v-else style="margin-top: 8px">
     <h1 id="table-heading">
-      <p>Noticol</p>
+      <p style="margin-left: 0;">Noticol</p>
       <p>Schadelijk</p>
       <p>Eindbestemming</p>
       <p>Datum</p>
       <p>Status</p>
     </h1>
     <ul id="ul">
-      <li v-for="item in result">
+      <li v-for="item in result" key="item.noticol">
+        <b-card style="background-color: #e3e3e3; margin-bottom: 8px; padding: 16px;">
         <div id="inline-flex-div" style="padding: 0;">
-          <p style="width: 20%;">{{ item.noticol }}</p>
-          <p style="width: 20%;">{{ item.hazardous ? 'Ja' : 'Nee' }}</p>
-          <p style="width: 20%;">{{ item.destination }}</p>
-          <p style="width: 20%;">{{ new Date(item.date).toLocaleDateString() }}</p>
-          <p style="width: 20%;">{{ item.status }}</p>
-          <b-button @click="$router.push(`/shipment/${item.id}`)" variant="primary" style="margin-left: 16px;">
-            Bekijk
-          </b-button>
+          <a id="noticol" style="margin-left: 0;" @click="$router.push(`/shipment/${item.noticol}`)">{{ item.noticol }}</a>
+          <p>{{ item.hazardous ? 'Ja' : 'Nee' }}</p>
+          <p>{{ item.destination }}</p>
+          <p>{{ item.actualDate }}</p>
+          <p>{{ item.status }}</p>
         </div>
+        </b-card>
       </li>
     </ul>
   </div>
@@ -80,7 +76,7 @@ const fetchShipments = async (
 
 <style scoped>
 #table-heading {
-  padding: 16px;
+  padding: 30px;
   margin-top: auto;
   display: flex;
   justify-content: space-between;
@@ -100,7 +96,10 @@ input {
   margin: 1rem;
   margin-left: 0.5rem;
 }
-#date {
+#noticol {
+  cursor: pointer;
+  color: blue;
+  text-decoration: underline;
 }
 input[type=checkbox]
 {
@@ -111,5 +110,11 @@ input[type=checkbox]
   -o-transform: scale(2); /* Opera */
   transform: scale(2);
   padding: 10px;
+}
+#inline-flex-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
 }
 </style>

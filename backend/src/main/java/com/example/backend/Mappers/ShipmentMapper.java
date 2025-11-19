@@ -17,6 +17,7 @@ public class ShipmentMapper {
         shipment.setHazardous(dto.getHazardous());
         shipment.setStatus(dto.getStatus());
         shipment.setHandlingUnit(new HandlingUnit());
+        shipment.setActualDate(dto.getDate().toString());
 
         return shipment;
     }

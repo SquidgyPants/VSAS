@@ -1,15 +1,12 @@
 package com.example.backend.DTOs;
 
-import com.example.backend.Models.HandlingUnit;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -21,7 +18,7 @@ public class ShipmentDTO {
 
     private Boolean hazardous;
     private String status;
-    private Date date;
+    private LocalDate date;
 
     private String destination;
 }

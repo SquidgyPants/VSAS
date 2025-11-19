@@ -17,6 +17,7 @@ public class Shipment {
 
     private String startDate;
     private String endDate;
+    private String actualDate;
 
     private HandlingUnit handlingUnit;
 

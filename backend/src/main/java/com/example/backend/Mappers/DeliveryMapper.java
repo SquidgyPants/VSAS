@@ -3,6 +3,7 @@ package com.example.backend.Mappers;
 import com.example.backend.DTOs.DeliveryDTO;
 import com.example.backend.Models.Delivery;
 
+import java.util.List;
 import java.util.UUID;
 
 public class DeliveryMapper {
@@ -26,5 +27,11 @@ public class DeliveryMapper {
         deliveryDTO.setOrderNumber(delivery.getOrderNumber());
         deliveryDTO.setQuantity(delivery.getQuantity());
         return deliveryDTO;
+    }
+
+    public static List<Delivery> toEntityList(List<DeliveryDTO> dtoList) {
+        return dtoList.stream()
+                .map(DeliveryMapper::toEntity)
+                .toList();
     }
 }

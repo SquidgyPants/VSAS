@@ -17,6 +17,7 @@ public class HandlingUnit {
     private double volume;
     private String type;
     private boolean stackable;
+    private String noticol;
 
     private List<Delivery> deliveries;
 }
