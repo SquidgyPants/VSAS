@@ -15,7 +15,7 @@ const links = [
         component: ShipmentComponent,
     },
     {
-        path:"/shipment/:noticol",
+        path:"/SelectedShipment/:noticolid",
         name:"SelectedShipment",
         component: SelectedShipment,
     }

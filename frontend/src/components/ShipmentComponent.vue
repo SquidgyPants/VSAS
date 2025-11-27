@@ -59,11 +59,11 @@ const fetchShipments = async (
       <li v-for="item in result" key="item.noticol">
         <b-card style="background-color: #e3e3e3; margin-bottom: 8px; padding: 16px;">
         <div id="inline-flex-div" style="padding: 0;">
-          <a id="noticol" style="margin-left: 0;" @click="$router.push(`/shipment/${item.noticol}`)">{{ item.noticol }}</a>
+          <a :id="noticol" @click="$router.push(`/SelectedShipment/${item.noticol}`)">{{ item.noticol }}</a>
           <p>{{ item.hazardous ? 'Ja' : 'Nee' }}</p>
           <p>{{ item.destination }}</p>
           <p>{{ item.actualDate }}</p>
-          <p>{{ item.status }}</p>
+          <p>{{ item.status }}</p>s
         </div>
         </b-card>
       </li>
