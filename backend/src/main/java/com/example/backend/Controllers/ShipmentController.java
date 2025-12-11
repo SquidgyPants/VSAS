@@ -2,11 +2,15 @@ package com.example.backend.Controllers;
 
 import com.example.backend.Models.Shipment;
 import com.example.backend.Services.ShipmentService;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -25,14 +29,16 @@ public class ShipmentController {
                                                           @RequestParam(required = false) String status,
                                                           @RequestParam(required = false) String destination,
                                                           @RequestParam(required = false) String startDate,
-                                                          @RequestParam(required = false) String endDate) {
+                                                          @RequestParam(required = false) String endDate,
+                                                          @RequestParam(required = false) String deliveryNote) {
         Shipment exampleShipment = new Shipment(
                 noticol != null && !noticol.isBlank() ? noticol : null,
                 hazardous,
                 destination != null && !destination.isBlank() ? destination : null,
                 status != null && !status.isBlank() ? status : null,
                 startDate != null && !startDate.isBlank() ? startDate : null,
-                endDate != null && !endDate.isBlank() ? endDate : null
+                endDate != null && !endDate.isBlank() ? endDate : null,
+                deliveryNote != null && !deliveryNote.isBlank() ? deliveryNote : null
         );
 
         List<Shipment> shipments = shipmentService.SearchShipments(exampleShipment);
@@ -42,7 +48,6 @@ public class ShipmentController {
         else {
             return ResponseEntity.ok(shipments);
         }
-
     }
 
     @GetMapping("/getShipmentById")
@@ -53,5 +58,15 @@ public class ShipmentController {
         } else {
             return ResponseEntity.ok(shipment);
         }
+    }
+
+    @PostMapping("/exportToExcel")
+    public ResponseEntity<Shipment> exportToExcel(HttpServletResponse response, @RequestBody Shipment shipment) throws IOException {
+        response.setContentType("application/octet-stream");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=\"" + shipment.getNoticol() + "_" + shipment.getActualDate() + ".xlsx\"";
+        response.setHeader(headerKey, headerValue);
+        shipmentService.ExportShipmentToExcel(response, shipment);
+        return ResponseEntity.ok(shipment);
     }
 }

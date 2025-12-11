@@ -19,6 +19,7 @@ public class ShipmentDTO {
     private Boolean hazardous;
     private String status;
     private LocalDate date;
+    private String deliveryNote;
 
     private String destination;
 }

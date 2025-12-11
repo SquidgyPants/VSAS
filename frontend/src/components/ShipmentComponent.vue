@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import {ref} from 'vue';
 import { Client, Shipment } from '../API';
+import router from "../router.ts";
 
 const client = new Client();
 const result = ref<Shipment[]>([]);
@@ -35,7 +36,7 @@ const fetchShipments = async (
   <div class="container">
     <form @submit.prevent="fetchShipments">
       Noticol<input type="text" placeholder="Noticol" v-model="noticol"/>
-      Schadelijk <input type="checkbox" v-model="hazardous"/>
+      VGS <input type="checkbox" v-model="hazardous"/>
       Status<input type="text" placeholder="Status" v-model="status"/>
       Bestemming<input type="text" placeholder="Bestemming" v-model="destination"/>
       <br>
@@ -50,7 +51,7 @@ const fetchShipments = async (
   <div class="container" v-else style="margin-top: 8px">
     <h1 id="table-heading">
       <p style="margin-left: 0;">Noticol</p>
-      <p>Schadelijk</p>
+      <p>VGS</p>
       <p>Eindbestemming</p>
       <p>Datum</p>
       <p>Status</p>
@@ -58,13 +59,13 @@ const fetchShipments = async (
     <ul id="ul">
       <li v-for="item in result" key="item.noticol">
         <b-card style="background-color: #e3e3e3; margin-bottom: 8px; padding: 16px;">
-        <div id="inline-flex-div" style="padding: 0;">
-          <a :id="noticol" @click="$router.push(`/SelectedShipment/${item.noticol}`)">{{ item.noticol }}</a>
-          <p>{{ item.hazardous ? 'Ja' : 'Nee' }}</p>
-          <p>{{ item.destination }}</p>
-          <p>{{ item.actualDate }}</p>
-          <p>{{ item.status }}</p>s
-        </div>
+          <div id="inline-flex-div" style="padding: 0;">
+            <a :id="noticol" @click="router.push(`/SelectedShipment/${item.noticol}`)">{{ item.noticol }}</a>
+            <p>{{ item.hazardous ? 'Ja' : 'Nee' }}</p>
+            <p>{{ item.destination }}</p>
+            <p>{{ item.actualDate }}</p>
+            <p>{{ item.status }}</p>
+          </div>
         </b-card>
       </li>
     </ul>

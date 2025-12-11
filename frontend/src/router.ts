@@ -15,9 +15,10 @@ const links = [
         component: ShipmentComponent,
     },
     {
-        path:"/SelectedShipment/:noticolid",
+        path:"/SelectedShipment/:noticol",
         name:"SelectedShipment",
         component: SelectedShipment,
+        props: true,
     }
     ];
 

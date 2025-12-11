@@ -14,6 +14,7 @@ public class Shipment {
     private Boolean hazardous;
     private String destination;
     private String status;
+    private String deliveryNote;
 
     private String startDate;
     private String endDate;
@@ -21,7 +22,7 @@ public class Shipment {
 
     private HandlingUnit handlingUnit;
 
-    public Shipment(String noticol, Boolean hazardous, String destination, String status, String startDate, String endDate) {
+    public Shipment(String noticol, Boolean hazardous, String destination, String status, String startDate, String endDate, String deliveryNote) {
 
         this.noticol = noticol;
         this.hazardous = hazardous;
@@ -29,6 +30,7 @@ public class Shipment {
         this.status = status;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.deliveryNote = deliveryNote;
     }
 
     public Shipment() {

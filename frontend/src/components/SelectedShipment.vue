@@ -8,12 +8,18 @@ const route = useRoute();
 const isLoading = ref(false);
 const client = new Client();
 const selectedShipment = ref<Shipment>(null as unknown as Shipment);
+const exportedShipment = ref<Shipment>(null as unknown as Shipment);
 const error = ref();
 
+defineProps({
+  noticol: String
+})
+
 const fetchSelectedShipment = async () => {
+  console.log("Fetching shipment with Noticol:", route.params.noticol);
   isLoading.value = true;
   try {
-    selectedShipment.value = await client.getShipmentById(route.params.noticolid as string);
+    selectedShipment.value = await client.getShipmentById(route.params.noticol as string);
     console.log("Selected Shipment:", selectedShipment.value);
   } catch (err) {
     console.error("Error fetching selected shipment:", err);
@@ -23,8 +29,23 @@ const fetchSelectedShipment = async () => {
   }
 };
 
+const exportToExcel = async () => {
+  console.log("Exporting to Excel..." +
+  "Report: " + selectedShipment.value);
+  isLoading.value = true;
+  try {
+    exportedShipment.value = await client.exportToExcel(selectedShipment?.value);
+    console.log("Export to Excel initiated.");
+  } catch (err) {
+    console.error("Error exporting to Excel:", err);
+  }
+  finally {
+    isLoading.value = false;
+  }
+};
+
 onMounted(() => {
-   fetchSelectedShipment()
+  fetchSelectedShipment()
 })
 
 </script>
@@ -36,26 +57,26 @@ onMounted(() => {
     <li v-bind="selectedShipment">
       <b-card id="shipment" style="background-color: #e3e3e3; margin-bottom: 8px; padding: 16px;">
         <div id="inline-flex-div" style="padding: 0;">
-          <p>Noticol: {{selectedShipment.noticol}}</p>
+          <p>Noticol: {{selectedShipment?.noticol}}</p>
 
-          <p v-if="selectedShipment.hazardous">Hazardous: Yes</p>
-          <p v-else>Hazardous: No</p>
+          <p v-if="selectedShipment?.hazardous">VGS: Yes</p>
+          <p v-else>VGS: No</p>
 
-          <p>Desination: {{selectedShipment.destination}}</p>
-          <p>2nd Feedback: {{selectedShipment.actualDate}}</p>
-          <p>Status: {{selectedShipment.status}}</p>
+          <p>Desination: {{selectedShipment?.destination}}</p>
+          <p>2nd Feedback: {{selectedShipment?.actualDate}}</p>
+          <p>Status: {{selectedShipment?.status}}</p>
         </div>
         <b-card id="hu">
           <h5>Handling Unit Details:</h5>
           <div id="inline-flex-div" style="padding: 0;">
-            <p>Type: {{selectedShipment.handlingUnit?.type}}</p>
-            <p>Length: {{selectedShipment.handlingUnit?.length}}</p>
-            <p>Height: {{selectedShipment.handlingUnit?.height}}</p>
-            <p>Breadth: {{selectedShipment.handlingUnit?.breadth}}</p>
-            <p>Weight: {{selectedShipment.handlingUnit?.weight}}</p>
-            <p>Volume: {{selectedShipment.handlingUnit?.volume}}</p>
+            <p>Type: {{selectedShipment?.handlingUnit?.type}}</p>
+            <p>Length: {{selectedShipment?.handlingUnit?.length}}</p>
+            <p>Height: {{selectedShipment?.handlingUnit?.height}}</p>
+            <p>Breadth: {{selectedShipment?.handlingUnit?.breadth}}</p>
+            <p>Weight: {{selectedShipment?.handlingUnit?.weight}}</p>
+            <p>Volume: {{selectedShipment?.handlingUnit?.volume}}</p>
           </div>
-          <b-card id="delivery" v-for="item in selectedShipment.handlingUnit?.deliveries" :key="item.orderNumber">
+          <b-card id="delivery" v-for="item in selectedShipment?.handlingUnit?.deliveries" :key="item.orderNumber">
             <h6>Delivery Item:</h6>
             <div id="inline-flex-div" style="padding: 0;">
               <p>Order Number: {{item.orderNumber}}</p>
@@ -69,6 +90,7 @@ onMounted(() => {
       </b-card>
     </li>
   </ul>
+  <div id="button-div">
   <b-button
       id="back-button"
       @click="$router.push(`/shipment`)"
@@ -76,6 +98,14 @@ onMounted(() => {
   >
     Back to Search
   </b-button>
+  <b-button
+    id="export-button"
+    @click="exportToExcel()"
+    style="margin-bottom: 5%;"
+  >
+    Export report to Excel
+  </b-button>
+  </div>
 
 
 </template>
@@ -98,5 +128,13 @@ onMounted(() => {
   margin: 0;
   padding: 0;
   background-color: #cfcfcf;
+}
+#export-button {
+  background-color: green;
+}
+#button-div {
+  display: flex;
+  justify-content: space-between;
+  margin: 1%;
 }
 </style>

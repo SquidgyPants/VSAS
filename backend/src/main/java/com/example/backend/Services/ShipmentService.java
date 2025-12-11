@@ -1,5 +1,6 @@
 package com.example.backend.Services;
 
+import com.example.backend.Configs.ExcelExportUtils;
 import com.example.backend.DTOs.HandlingUnitDTO;
 import com.example.backend.DTOs.ShipmentDTO;
 import com.example.backend.Mappers.DeliveryMapper;
@@ -10,9 +11,11 @@ import com.example.backend.Models.Shipment;
 import com.example.backend.Repositories.DeliveryRepo;
 import com.example.backend.Repositories.HandlingUnitRepo;
 import com.example.backend.Repositories.ShipmentRepo;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -38,7 +41,7 @@ public class ShipmentService {
 
         List<ShipmentDTO> filtered = new ArrayList<>();
         for (ShipmentDTO dto : shipmentDTOs) {
-            if (exampleShipment.getStartDate() == null && exampleShipment.getEndDate() == null) {
+                 if (exampleShipment.getStartDate() == null && exampleShipment.getEndDate() == null) {
                 filtered.add(dto);
                 continue;
             }
@@ -70,6 +73,12 @@ public class ShipmentService {
         HandlingUnit hu = HandlingUnitMapper.toEntity(huRepo.findByNoticol(shipment.getNoticol()));
         hu.setDeliveries(DeliveryMapper.toEntityList(deRepo.findDeliveriesByHandlingunitid(hu.getId().toString())));
         shipment.setHandlingUnit(hu);
+        return shipment;
+    }
+
+    public Shipment ExportShipmentToExcel(HttpServletResponse response, Shipment shipment) throws IOException {
+        ExcelExportUtils exportUtils = new ExcelExportUtils(shipment);
+        exportUtils.exportDataToExcel(response, shipment);
         return shipment;
     }
 }
