@@ -61,12 +61,11 @@ public class ShipmentController {
     }
 
     @PostMapping("/exportToExcel")
-    public ResponseEntity<Shipment> exportToExcel(HttpServletResponse response, @RequestBody Shipment shipment) throws IOException {
+    public void exportToExcel(HttpServletResponse response, @RequestBody Shipment shipment) throws IOException {
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=\"" + shipment.getNoticol() + "_" + shipment.getActualDate() + ".xlsx\"";
         response.setHeader(headerKey, headerValue);
         shipmentService.ExportShipmentToExcel(response, shipment);
-        return ResponseEntity.ok(shipment);
     }
 }

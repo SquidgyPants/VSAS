@@ -11,6 +11,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.aspectj.weaver.ast.Var;
 
 import java.io.IOException;
 import java.util.List;
@@ -73,8 +74,8 @@ public class ExcelExportUtils {
         createCell(row, 8, "Stackable", style);
         createCell(row, 9, "QTY", style);
         createCell(row, 10, "Manufacturer", style);
-        createCell(row, 12, "Item Number", style);
-        createCell(row, 13, "Type Handling Number", style);
+        createCell(row, 11, "Item Number", style);
+        createCell(row, 12, "Handling Number", style);
     }
 
     private void writeReportData() {
@@ -83,9 +84,9 @@ public class ExcelExportUtils {
         font.setFontHeight(14);
         style.setFont(font);
 
-        Row row = sheet.createRow(1);
+        Row row = sheet.createRow(2);
         int columnCount = 0;
-        createCell(row, columnCount++, Shipment.getNoticol(), style);
+        createCell(row, columnCount++, String.valueOf(Shipment.getNoticol()), style);
         createCell(row, columnCount++, Shipment.getHazardous(), style);
         createCell(row, columnCount++, Shipment.getDestination(), style);
         createCell(row, columnCount++, Shipment.getStatus(), style);
@@ -93,8 +94,8 @@ public class ExcelExportUtils {
         createCell(row, columnCount++, Shipment.getActualDate(), style);
         if (Shipment.getHandlingUnit() != null) {
             createCell(row, columnCount++, Shipment.getHandlingUnit().getType(), style);
-            createCell(row, columnCount++, Shipment.getHandlingUnit().isStackable(), style);
             createCell(row, columnCount++, Shipment.getHandlingUnit().getWeight(), style);
+            createCell(row, columnCount++, Shipment.getHandlingUnit().isStackable(), style);
             if (Shipment.getHandlingUnit().getDeliveries() != null && !Shipment.getHandlingUnit().getDeliveries().isEmpty()) {
                 createCell(row, columnCount++, Shipment.getHandlingUnit().getDeliveries().size(), style);
                 createCell(row, columnCount++, Shipment.getHandlingUnit().getDeliveries().get(0).getManufacturer(), style);

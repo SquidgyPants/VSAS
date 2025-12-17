@@ -3,12 +3,12 @@ import { ref } from 'vue';
 import { Client, Shipment } from '../API';
 import {onMounted} from "vue";
 import {useRoute} from "vue-router";
+import axios from "axios";
 
 const route = useRoute();
 const isLoading = ref(false);
 const client = new Client();
 const selectedShipment = ref<Shipment>(null as unknown as Shipment);
-const exportedShipment = ref<Shipment>(null as unknown as Shipment);
 const error = ref();
 
 defineProps({
@@ -30,19 +30,72 @@ const fetchSelectedShipment = async () => {
 };
 
 const exportToExcel = async () => {
-  console.log("Exporting to Excel..." +
-  "Report: " + selectedShipment.value);
+  console.log("Exporting to Excel...");
   isLoading.value = true;
   try {
-    exportedShipment.value = await client.exportToExcel(selectedShipment?.value);
-    console.log("Export to Excel initiated.");
+    await client.exportToExcel(selectedShipment.value);
+    await downloadExcel();
+    console.log("Export to Excel completed.");
   } catch (err) {
     console.error("Error exporting to Excel:", err);
-  }
-  finally {
+  } finally {
     isLoading.value = false;
   }
 };
+
+async function downloadExcel() {
+  const response = await fetch("/api/export", {
+    method: "GET",
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to download file");
+  }
+
+  const blob = await response.blob();
+
+  // Parse filename
+  // const disposition = response.headers.get("content-disposition") || "";
+  // const fileName = getFileName(disposition);
+  console.log(response.headers.get("content-disposition"));
+  const fileName = response.headers.get("content-disposition") || "report.xlsx";
+
+  // Create temp download link
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = fileName;
+
+  document.body.appendChild(link);
+  link.click();
+
+  // Cleanup
+  link.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+function getFileName(disposition: string): string {
+  // filename*=UTF-8''encoded-name.xlsx
+  const utf8 = /filename\*\s*=\s*UTF-8''([^;]+)/i.exec(disposition);
+  if (utf8?.[1]) {
+    return decodeURIComponent(utf8[1]);
+  }
+
+  // filename="something.xlsx"
+  const quoted = /filename\s*=\s*"([^"]+)"/i.exec(disposition);
+  if (quoted?.[1]) {
+    return quoted[1];
+  }
+
+  // filename=something.xlsx
+  const plain = /filename\s*=\s*([^;]+)/i.exec(disposition);
+  if (plain?.[1]) {
+    return plain[1];
+  }
+
+  return "download.xlsx";
+}
 
 onMounted(() => {
   fetchSelectedShipment()
