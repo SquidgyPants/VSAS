@@ -1,19 +1,15 @@
-# Vue 3 + TypeScript + Vite
-
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
-
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
-
-
 ## VSAS (Vertaling SAP/S4HANA)
 Deze applicatie is ontwikkeld om een idee te geven hoe het toekomstige systeem bij het liaison office in Luxemburg, Capellen dient te functioneren. Dit in de vorm van een prototype. Zie het bijgevoegde adviesoducment voor met uitleg over het idee.
 Het project is een stageopdracht bedoeld voor de Nederlandse vertegenwoordigers bij NSPA.
 
-## Vereisten
+## Vereisten (Zie pom.xml)
+- Amazon Coretto 17.0.14
+- Java 17
 - Node.js v22.14.0+
 - Git
+- Database op eigen manier. Eventueel integratie, SQL database of textdocument.
 
-Ik heb WebStorm gebruikt voor frontend
+Ik heb IntelliJ IDEA gebruikt voor backend
 
 ## Installatie
 1. Clone de repository
@@ -21,9 +17,10 @@ Ik heb WebStorm gebruikt voor frontend
 git clone https://github.com/SquidgyPants/VSAS.git
 ```
 2. Ga naar de juiste map
+
 ```bash
 cd VSAS
-cd frontend
+cd backend
 npm install
 ```
 
@@ -42,20 +39,21 @@ mvn clean-install
 
 4. Applicatie starten
 
-```bash
-npm run dev
-```
+src/java.com.example/BackendApplication.java runnen
+
 
 5. Controleer of applicatie gestart is
-http://localhost:8080/swagger-ui/index.html#
+http://localhost:5173/
 
 
 ## Projectstructuur
-/src -> API.ts voor backend endpoints
-/src/components -> verschillende pagina's voor de applicatie
+/src -> broncode
+/src/tests -> testbestanden
+/src/main -> classes en startapplicatie
 
 ## Bekende beperkingen
-- Deze applicatie werkt alleen lokaal EN als de backend applicatie draait
+- Deze applicatie werkt alleen lokaal
+- Er mist een database buiten fontys workspace. Er moet dus een database aan gekoppeld worden met een connectionstring in application.properties.
 
 
 ## Auteur
