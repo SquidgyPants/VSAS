@@ -1,13 +1,12 @@
 package com.example.backend.DTOs;
 
-import com.example.backend.Models.HandlingUnit;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -15,13 +14,12 @@ import java.util.List;
 @Entity
 public class ShipmentDTO {
     @Id
-    private String id;
     private String noticol;
 
-    private boolean hazardous;
+    private Boolean hazardous;
     private String status;
+    private LocalDate date;
+    private String deliveryNote;
 
     private String destination;
-
-    private String handlingUnitId;
 }

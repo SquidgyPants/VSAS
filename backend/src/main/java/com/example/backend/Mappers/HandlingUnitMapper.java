@@ -4,11 +4,12 @@ import com.example.backend.DTOs.HandlingUnitDTO;
 import com.example.backend.Models.HandlingUnit;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class HandlingUnitMapper {
     public static HandlingUnit toEntity(HandlingUnitDTO dto) {
         HandlingUnit handlingUnit = new HandlingUnit();
-        handlingUnit.setId(dto.getId());
+        handlingUnit.setId(UUID.fromString(dto.getId()));
         handlingUnit.setBreadth(dto.getBreadth());
         handlingUnit.setHeight(dto.getHeight());
         handlingUnit.setWeight(dto.getWeight());
@@ -23,7 +24,7 @@ public class HandlingUnitMapper {
 
     public static HandlingUnitDTO toDTO(HandlingUnit handlingUnit) {
         HandlingUnitDTO dto = new HandlingUnitDTO();
-        dto.setId(handlingUnit.getId());
+        dto.setId(handlingUnit.getId().toString());
         dto.setBreadth(handlingUnit.getBreadth());
         dto.setHeight(handlingUnit.getHeight());
         dto.setWeight(handlingUnit.getWeight());
