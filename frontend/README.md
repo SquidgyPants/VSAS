@@ -51,8 +51,12 @@ http://localhost:8080/swagger-ui/index.html#
 
 
 ## Projectstructuur
-/src -> API.ts voor backend endpoints
-/src/components -> verschillende pagina's voor de applicatie
+- /src -> API.ts voor backend endpoints
+- /src/components -> verschillende pagina's voor de applicatie
+- NavComponent: De component die als navigatiebalk functioneert
+- ReportComponent: De component die een rapport laat zien met dummy N@msis data en dummy SAP data
+- SelectedShipment: De component die details laat zien van een bestelling en deze kan exporteren naar een Excel file
+- ShipmentComponent: De component die dient als zoekfunctie voor alle bestellingen 
 
 ## Bekende beperkingen
 - Deze applicatie werkt alleen lokaal EN als de backend applicatie draait
