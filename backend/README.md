@@ -47,9 +47,11 @@ http://localhost:5173/
 
 
 ## Projectstructuur
-/src -> broncode
-/src/tests -> testbestanden
-/src/main -> classes en startapplicatie
+- /src -> broncode
+- /src/tests -> testbestanden
+- /src/main/com/exammple/backend -> classes en startapplicatie
+- /backend/Configs CORS config + Excel export setup
+- /backend/Controllers/ShipmentController.java Code voor het ophalen, inzien en exporteren van bestellingen
 
 ## Bekende beperkingen
 - Deze applicatie werkt alleen lokaal
