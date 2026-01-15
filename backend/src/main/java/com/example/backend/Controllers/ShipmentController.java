@@ -5,6 +5,7 @@ import com.example.backend.Services.ShipmentService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@CrossOrigin(exposedHeaders = "Content-Disposition")
 @RequestMapping("/shipment")
 public class ShipmentController {
     private ShipmentService shipmentService;
@@ -60,12 +62,16 @@ public class ShipmentController {
         }
     }
 
+    // Java
     @PostMapping("/exportToExcel")
-    public void exportToExcel(HttpServletResponse response, @RequestBody Shipment shipment) throws IOException {
-        response.setContentType("application/octet-stream");
-        String headerKey = "Content-Disposition";
-        String headerValue = "attachment; filename=\"" + shipment.getNoticol() + "_" + shipment.getActualDate() + ".xlsx\"";
-        response.setHeader(headerKey, headerValue);
+    public ResponseEntity<HttpServletResponse> exportToExcel(HttpServletResponse response, @RequestBody Shipment shipment) throws IOException {
+        ContentDisposition contentDisposition = ContentDisposition.builder("attachment")
+                .filename(shipment.getNoticol() + "_" + shipment.getActualDate() + ".xlsx")
+                .build();
+        response.setHeader("Content-Disposition", contentDisposition.toString());
+        response.setContentType(MediaType.APPLICATION_OCTET_STREAM_VALUE);
         shipmentService.ExportShipmentToExcel(response, shipment);
+
+        return ResponseEntity.ok().header("Content-Disposition", response.getHeader(contentDisposition.toString())).build();
     }
 }

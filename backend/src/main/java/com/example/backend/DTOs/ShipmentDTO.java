@@ -1,5 +1,6 @@
 package com.example.backend.DTOs;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -18,6 +19,7 @@ public class ShipmentDTO {
 
     private Boolean hazardous;
     private String status;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM-dd-yyyy")
     private LocalDate date;
     private String deliveryNote;
 

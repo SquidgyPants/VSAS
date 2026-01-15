@@ -44,35 +44,53 @@ const exportToExcel = async () => {
 };
 
 async function downloadExcel() {
-  const response = await fetch("/api/export", {
-    method: "GET",
+  const response = await fetch("/shipment/exportToExcel", {
+    method: "POST",
+    mode: 'cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(selectedShipment.value)
   });
 
   if (!response.ok) {
     throw new Error("Failed to download file");
   }
 
+  const disp = response.headers.get('content-disposition') || '';
+  const filename = getFileName(disp) || 'report.xlsx';
+
   const blob = await response.blob();
-
-  // Parse filename
-  // const disposition = response.headers.get("content-disposition") || "";
-  // const fileName = getFileName(disposition);
-  console.log(response.headers.get("content-disposition"));
-  const fileName = response.headers.get("content-disposition") || "report.xlsx";
-
-  // Create temp download link
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-
-  link.href = url;
-  link.download = fileName;
-
-  document.body.appendChild(link);
-  link.click();
-
-  // Cleanup
-  link.remove();
-  window.URL.revokeObjectURL(url);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  // let blob = await response.blob();
+  //
+  // // Parse filename
+  // const contentDisposition = response.headers.get("Content-Disposition") || "";
+  // console.log(contentDisposition);
+  // const fileName = getFileName(contentDisposition);
+  // // const fileName = selectedShipment.value?.noticol + "_" + selectedShipment.value?.actualDate + ".xlsx";
+  //
+  //
+  // // Create temp download link
+  // const url = window.URL.createObjectURL(blob);
+  // const link = document.createElement("a");
+  //
+  // link.href = url;
+  // link.download = fileName;
+  //
+  // document.body.appendChild(link);
+  // link.click();
+  //
+  // // Cleanup
+  // setTimeout(() => {
+  //   document.body.removeChild(link);
+  //   window.URL.revokeObjectURL(url);
+  // }, 200);
 }
 
 function getFileName(disposition: string): string {
