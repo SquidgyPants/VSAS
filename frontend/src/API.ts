@@ -20,7 +20,7 @@ export class Client {
     /**
      * @return OK
      */
-    exportToExcel(body: Shipment): Promise<void> {
+    exportToExcel(body: Shipment): Promise<HttpServletResponse> {
         let url_ = this.baseUrl + "/shipment/exportToExcel";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -31,6 +31,7 @@ export class Client {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Accept": "*/*"
             }
         };
 
@@ -39,19 +40,22 @@ export class Client {
         });
     }
 
-    protected processExportToExcel(response: Response): Promise<void> {
+    protected processExportToExcel(response: Response): Promise<HttpServletResponse> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
-            return;
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = HttpServletResponse.fromJS(resultData200);
+            return result200;
             });
         } else if (status !== 200 && status !== 204) {
             return response.text().then((_responseText) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<void>(null as any);
+        return Promise.resolve<HttpServletResponse>(null as any);
     }
 
     /**
@@ -411,6 +415,202 @@ export interface IShipment {
     endDate?: string;
     actualDate?: string;
     handlingUnit?: HandlingUnit;
+
+    [key: string]: any;
+}
+
+export class HttpServletResponse implements IHttpServletResponse {
+    headerNames?: string[];
+    status?: number;
+    trailerFields?: any;
+    locale?: string;
+    contentType?: string;
+    outputStream?: ServletOutputStream;
+    contentLength?: number;
+    contentLengthLong?: number;
+    characterEncoding?: string;
+    committed?: boolean;
+    bufferSize?: number;
+    writer?: any;
+
+    [key: string]: any;
+
+    constructor(data?: IHttpServletResponse) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            if (Array.isArray(_data["headerNames"])) {
+                this.headerNames = [] as any;
+                for (let item of _data["headerNames"])
+                    this.headerNames!.push(item);
+            }
+            this.status = _data["status"];
+            this.trailerFields = _data["trailerFields"];
+            this.locale = _data["locale"];
+            this.contentType = _data["contentType"];
+            this.outputStream = _data["outputStream"] ? ServletOutputStream.fromJS(_data["outputStream"]) : undefined as any;
+            this.contentLength = _data["contentLength"];
+            this.contentLengthLong = _data["contentLengthLong"];
+            this.characterEncoding = _data["characterEncoding"];
+            this.committed = _data["committed"];
+            this.bufferSize = _data["bufferSize"];
+            this.writer = _data["writer"];
+        }
+    }
+
+    static fromJS(data: any): HttpServletResponse {
+        data = typeof data === 'object' ? data : {};
+        let result = new HttpServletResponse();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        if (Array.isArray(this.headerNames)) {
+            data["headerNames"] = [];
+            for (let item of this.headerNames)
+                data["headerNames"].push(item);
+        }
+        data["status"] = this.status;
+        data["trailerFields"] = this.trailerFields;
+        data["locale"] = this.locale;
+        data["contentType"] = this.contentType;
+        data["outputStream"] = this.outputStream ? this.outputStream.toJSON() : undefined as any;
+        data["contentLength"] = this.contentLength;
+        data["contentLengthLong"] = this.contentLengthLong;
+        data["characterEncoding"] = this.characterEncoding;
+        data["committed"] = this.committed;
+        data["bufferSize"] = this.bufferSize;
+        data["writer"] = this.writer;
+        return data;
+    }
+}
+
+export interface IHttpServletResponse {
+    headerNames?: string[];
+    status?: number;
+    trailerFields?: any;
+    locale?: string;
+    contentType?: string;
+    outputStream?: ServletOutputStream;
+    contentLength?: number;
+    contentLengthLong?: number;
+    characterEncoding?: string;
+    committed?: boolean;
+    bufferSize?: number;
+    writer?: any;
+
+    [key: string]: any;
+}
+
+export class ServletOutputStream implements IServletOutputStream {
+    ready?: boolean;
+    writeListener?: WriteListener;
+
+    [key: string]: any;
+
+    constructor(data?: IServletOutputStream) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.ready = _data["ready"];
+            this.writeListener = _data["writeListener"] ? WriteListener.fromJS(_data["writeListener"]) : undefined as any;
+        }
+    }
+
+    static fromJS(data: any): ServletOutputStream {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServletOutputStream();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["ready"] = this.ready;
+        data["writeListener"] = this.writeListener ? this.writeListener.toJSON() : undefined as any;
+        return data;
+    }
+}
+
+export interface IServletOutputStream {
+    ready?: boolean;
+    writeListener?: WriteListener;
+
+    [key: string]: any;
+}
+
+export class WriteListener implements IWriteListener {
+
+    [key: string]: any;
+
+    constructor(data?: IWriteListener) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (this as any)[property] = (data as any)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+        }
+    }
+
+    static fromJS(data: any): WriteListener {
+        data = typeof data === 'object' ? data : {};
+        let result = new WriteListener();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        return data;
+    }
+}
+
+export interface IWriteListener {
 
     [key: string]: any;
 }

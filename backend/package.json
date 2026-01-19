@@ -11,6 +11,7 @@
     "generate-api": "nswag openapi2tsclient /input:http://localhost:8080/v3/api-docs /output:../frontend/src/API.ts"
   },
   "dependencies": {
+    "content-disposition": "^1.0.1",
     "nswag": "^14.6.3"
   }
 }
