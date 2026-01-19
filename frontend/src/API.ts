@@ -424,14 +424,14 @@ export class HttpServletResponse implements IHttpServletResponse {
     status?: number;
     trailerFields?: any;
     locale?: string;
-    bufferSize?: number;
-    writer?: any;
-    committed?: boolean;
-    contentLengthLong?: number;
-    characterEncoding?: string;
     contentType?: string;
     outputStream?: ServletOutputStream;
     contentLength?: number;
+    contentLengthLong?: number;
+    characterEncoding?: string;
+    committed?: boolean;
+    bufferSize?: number;
+    writer?: any;
 
     [key: string]: any;
 
@@ -458,14 +458,14 @@ export class HttpServletResponse implements IHttpServletResponse {
             this.status = _data["status"];
             this.trailerFields = _data["trailerFields"];
             this.locale = _data["locale"];
-            this.bufferSize = _data["bufferSize"];
-            this.writer = _data["writer"];
-            this.committed = _data["committed"];
-            this.contentLengthLong = _data["contentLengthLong"];
-            this.characterEncoding = _data["characterEncoding"];
             this.contentType = _data["contentType"];
             this.outputStream = _data["outputStream"] ? ServletOutputStream.fromJS(_data["outputStream"]) : undefined as any;
             this.contentLength = _data["contentLength"];
+            this.contentLengthLong = _data["contentLengthLong"];
+            this.characterEncoding = _data["characterEncoding"];
+            this.committed = _data["committed"];
+            this.bufferSize = _data["bufferSize"];
+            this.writer = _data["writer"];
         }
     }
 
@@ -490,14 +490,14 @@ export class HttpServletResponse implements IHttpServletResponse {
         data["status"] = this.status;
         data["trailerFields"] = this.trailerFields;
         data["locale"] = this.locale;
-        data["bufferSize"] = this.bufferSize;
-        data["writer"] = this.writer;
-        data["committed"] = this.committed;
-        data["contentLengthLong"] = this.contentLengthLong;
-        data["characterEncoding"] = this.characterEncoding;
         data["contentType"] = this.contentType;
         data["outputStream"] = this.outputStream ? this.outputStream.toJSON() : undefined as any;
         data["contentLength"] = this.contentLength;
+        data["contentLengthLong"] = this.contentLengthLong;
+        data["characterEncoding"] = this.characterEncoding;
+        data["committed"] = this.committed;
+        data["bufferSize"] = this.bufferSize;
+        data["writer"] = this.writer;
         return data;
     }
 }
@@ -507,14 +507,14 @@ export interface IHttpServletResponse {
     status?: number;
     trailerFields?: any;
     locale?: string;
-    bufferSize?: number;
-    writer?: any;
-    committed?: boolean;
-    contentLengthLong?: number;
-    characterEncoding?: string;
     contentType?: string;
     outputStream?: ServletOutputStream;
     contentLength?: number;
+    contentLengthLong?: number;
+    characterEncoding?: string;
+    committed?: boolean;
+    bufferSize?: number;
+    writer?: any;
 
     [key: string]: any;
 }
